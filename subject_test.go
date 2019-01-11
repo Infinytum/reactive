@@ -42,3 +42,15 @@ func TestSubject_Next(t *testing.T) {
 		t.Error("Subscription handler wasnt called!")
 	}
 }
+
+func TestSubject_Pipe(t *testing.T) {
+	subject := NewSubject()
+
+	if subject != subject.Pipe() {
+		t.Error("Empty pipe is different from original")
+	}
+
+	if subject == subject.Pipe(Take(1)) {
+		t.Error("Take pipe resulted in original subject")
+	}
+}
