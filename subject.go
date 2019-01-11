@@ -48,6 +48,9 @@ func (subject *Subject) Unsubscribe(subscription Subscription) {
 func (subject *Subject) Pipe(fns ...func(Observable, Subjectable)) Observable {
 	parent := subject
 	for _, fn := range fns {
+		if fn == nil {
+			continue
+		}
 		sub := NewSubject()
 		fn(parent, sub)
 		parent = sub
