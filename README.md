@@ -1,9 +1,24 @@
 # Reactive [![GoDoc](https://godoc.org/github.com/infinytum/reactive?status.svg)](https://godoc.org/github.com/infinytum/reactive) [![Go Report Card](https://goreportcard.com/badge/github.com/infinytum/reactive)](https://goreportcard.com/report/github.com/infinytum/reactive)
 My attempt on creating a simple RxJs clone
 
+## Features
+---
+* Observables
+  * Multi-Type support
+* Subjects
+  * Subject
+  * ReplaySubject
+* Pipes
+  * Take
+  * TakeEvery
+  * Skip
+  * SkipEvery
+
+## Examples
 ---
 
-## Simple Subject
+
+### Simple Subject
 
 ```go
 package main
@@ -33,7 +48,7 @@ $ go run main.go
 4
 ```
 
-## Replay Subject
+### Replay Subject
 
 ```go
 package main
@@ -62,7 +77,7 @@ $ go run main.go
 4
 ```
 
-## Multi-Type support
+### Multi-Type support
 
 ```go
 package main
@@ -103,7 +118,7 @@ Int Handler: 0
 String Handler:
 ```
 
-## Take Pipe
+### Take Pipe
 
 ```go
 package main
@@ -132,7 +147,7 @@ $ go run main.go
 2
 ```
 
-## TakeEvery Pipe
+### TakeEvery Pipe
 
 ```go
 package main
@@ -161,7 +176,7 @@ $ go run main.go
 4
 ```
 
-## Skip Pipe
+### Skip Pipe
 
 ```go
 package main
@@ -190,7 +205,7 @@ $ go run main.go
 4
 ```
 
-## SkipEvery Pipe
+### SkipEvery Pipe
 
 ```go
 package main
