@@ -2,7 +2,6 @@
 My attempt on creating a simple RxJs clone
 
 ## Features
----
 * Observables
   * Multi-Type support
 * Subjects
@@ -15,8 +14,6 @@ My attempt on creating a simple RxJs clone
   * SkipEvery
 
 ## Examples
----
-
 
 ### Simple Subject
 
