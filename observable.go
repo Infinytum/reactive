@@ -5,7 +5,7 @@ package reactive
 type Observable interface {
 	// AsChannel returns a channel which will receive all
 	// further updates of this observable
-	AsChannel() <-chan []interface{}
+	AsChannel() chan []interface{}
 
 	// Pipe decorates an observable with one or multiple middlewares
 	// and returns a new observable with the decoration applied
