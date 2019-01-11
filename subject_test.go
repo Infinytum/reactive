@@ -54,3 +54,18 @@ func TestSubject_Pipe(t *testing.T) {
 		t.Error("Take pipe resulted in original subject")
 	}
 }
+
+func TestSubject_Unsubscribe(t *testing.T) {
+	subject := NewSubject()
+	subscription := subject.Subscribe(func() {})
+
+	if _, exists := subject.Subscriptions[subscription]; !exists {
+		t.Error("Subscription is not in subscription map")
+	}
+
+	subject.Unsubscribe(subscription)
+
+	if _, exists := subject.Subscriptions[subscription]; exists {
+		t.Error("Subscription is still in subscription map")
+	}
+}
