@@ -14,7 +14,7 @@ type Observable interface {
 	// Subscribe registers a function for further updates of
 	// this observable and returns a subscription token which can
 	// be used to unsubscribe from it at any time
-	Subscribe(fn interface{}) Subscription
+	Subscribe(fn interface{}) (Subscription, error)
 
 	// Unsubscribe unregisters a previously registered function for all
 	// further updates of this observable or until re-registering.

@@ -5,7 +5,7 @@ package reactive
 func Take(count int) func(Observable, Subjectable) {
 	return func(subject Observable, newSubject Subjectable) {
 		subscription := NewSubscription()
-		subscription = subject.Subscribe(func(args ...interface{}) {
+		subscription, _ = subject.Subscribe(func(args ...interface{}) {
 			newSubject.Next(args...)
 			count--
 

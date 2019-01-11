@@ -23,14 +23,14 @@ func (subject *ReplaySubject) AsChannel() chan []interface{} {
 // Subscribe registers a function for further updates of
 // this observable and returns a subscription token which can
 // be used to unsubscribe from it at any time
-func (subject *ReplaySubject) Subscribe(fn interface{}) Subscription {
-	subscription := subject.Subject.Subscribe(fn)
+func (subject *ReplaySubject) Subscribe(fn interface{}) (Subscription, error) {
+	subscription, err := subject.Subject.Subscribe(fn)
 
-	if subject.LastValues != nil {
+	if err == nil && subject.LastValues != nil {
 		subject.notifySubscriber(subscription, subject.LastValues)
 	}
 
-	return subscription
+	return subscription, err
 }
 
 // Pipe decorates an observable with one or multiple middlewares

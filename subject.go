@@ -1,6 +1,7 @@
 package reactive
 
 import (
+	"errors"
 	"reflect"
 )
 
@@ -24,11 +25,14 @@ func (subject *Subject) AsChannel() chan []interface{} {
 // Subscribe registers a function for further updates of
 // this observable and returns a subscription token which can
 // be used to unsubscribe from it at any time
-func (subject *Subject) Subscribe(fn interface{}) Subscription {
-	subscription := NewSubscription()
-	subject.Subscriptions[subscription] = fn
+func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
+	if reflect.TypeOf(fn).Kind() == reflect.Func {
+		subscription := NewSubscription()
+		subject.Subscriptions[subscription] = fn
 
-	return subscription
+		return subscription, nil
+	}
+	return Subscription(""), errors.New("fn is not a function")
 }
 
 // Unsubscribe unregisters a previously registered function for all

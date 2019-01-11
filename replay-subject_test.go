@@ -43,7 +43,7 @@ func TestReplaySubject_Pipe(t *testing.T) {
 
 func TestReplaySubject_Subscribe(t *testing.T) {
 	subject := NewReplaySubject()
-	subscription := subject.Subscribe(func(nr int) {})
+	subscription, _ := subject.Subscribe(func(nr int) {})
 
 	if _, exists := subject.Subscriptions[subscription]; !exists {
 		t.Error("Subscription is not in subscription map")

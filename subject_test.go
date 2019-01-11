@@ -23,10 +23,14 @@ func TestNewSubject(t *testing.T) {
 
 func TestSubject_Subscribe(t *testing.T) {
 	subject := NewSubject()
-	subscription := subject.Subscribe(func() {})
+	subscription, _ := subject.Subscribe(func() {})
 
 	if _, exists := subject.Subscriptions[subscription]; !exists {
 		t.Error("Subscription is not in subscription map")
+	}
+
+	if sub, err := subject.Subscribe(3); err == nil || sub != "" {
+		t.Error("Subscribe accepted non-function parameters")
 	}
 }
 
@@ -58,7 +62,7 @@ func TestSubject_Pipe(t *testing.T) {
 
 func TestSubject_Unsubscribe(t *testing.T) {
 	subject := NewSubject()
-	subscription := subject.Subscribe(func() {})
+	subscription, _ := subject.Subscribe(func() {})
 
 	if _, exists := subject.Subscriptions[subscription]; !exists {
 		t.Error("Subscription is not in subscription map")
