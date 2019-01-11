@@ -76,7 +76,7 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 		}
 
 		for i := 0; i < refFn.Type().NumIn(); i++ {
-			if refFn.Type().In(i).Kind() != reflect.ValueOf(values[i]).Type().Kind() {
+			if values[i] == nil || refFn.Type().In(i).Kind() != reflect.ValueOf(values[i]).Type().Kind() {
 				return
 			}
 		}
