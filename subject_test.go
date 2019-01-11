@@ -2,6 +2,7 @@ package reactive
 
 import (
 	"testing"
+	"time"
 )
 
 func TestNewSubject(t *testing.T) {
@@ -67,5 +68,27 @@ func TestSubject_Unsubscribe(t *testing.T) {
 
 	if _, exists := subject.Subscriptions[subscription]; exists {
 		t.Error("Subscription is still in subscription map")
+	}
+}
+
+func TestSubject_AsChannel(t *testing.T) {
+	subject := NewSubject()
+	channel := make(chan interface{})
+
+	go func() {
+		data := <-subject.AsChannel()
+		channel <- data
+	}()
+
+	// Wait for handler to register
+	<-time.After(time.Duration(400) * time.Millisecond)
+	subject.Next(true)
+
+	select {
+	case <-channel:
+		return
+	case <-time.After(time.Duration(500) * time.Millisecond):
+		t.Error("Subscription handler wasnt called!")
+		break
 	}
 }
