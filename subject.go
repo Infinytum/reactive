@@ -26,7 +26,7 @@ func (subject *Subject) AsChannel() chan []interface{} {
 // this observable and returns a subscription token which can
 // be used to unsubscribe from it at any time
 func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
-	if reflect.TypeOf(fn).Kind() == reflect.Func {
+	if fn != nil && reflect.TypeOf(fn).Kind() == reflect.Func {
 		subscription := NewSubscription()
 		subject.Subscriptions[subscription] = fn
 
@@ -70,7 +70,18 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 	}
 
 	if fn, ok := subject.Subscriptions[subscription]; ok {
-		reflect.ValueOf(fn).Call(passedArguments)
+		refFn := reflect.ValueOf(fn)
+		if refFn.Type().NumIn() != len(passedArguments) {
+			return
+		}
+
+		for i := 0; i < refFn.Type().NumIn(); i++ {
+			if refFn.Type().In(i).Kind() != reflect.ValueOf(values[i]).Type().Kind() {
+				return
+			}
+		}
+
+		refFn.Call(passedArguments)
 	}
 }
 
