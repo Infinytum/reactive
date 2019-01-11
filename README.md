@@ -62,6 +62,47 @@ $ go run main.go
 4
 ```
 
+## Multi-Type support
+
+```go
+package main
+
+import "github.com/infinytum/reactive"
+
+func main() {
+	subject := reactive.NewSubject()
+
+	subject.Subscribe(intHandler)
+	subject.Subscribe(stringHandler)
+
+	subject.Next(2)
+	subject.Next("Hello")
+	subject.Next("World")
+	subject.Next(4)
+	subject.Next(nil)
+}
+
+func intHandler(a int) {
+	print("Int Handler: ")
+	println(a)
+}
+
+func stringHandler(a string) {
+	print("String Handler: ")
+	println(a)
+}
+```
+
+Output
+```
+Int Handler: 2
+String Handler: Hello
+String Handler: World
+Int Handler: 4
+Int Handler: 0
+String Handler:
+```
+
 ## Take Pipe
 
 ```go
