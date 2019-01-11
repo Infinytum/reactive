@@ -64,24 +64,28 @@ func (subject *Subject) Next(values ...interface{}) {
 }
 
 func (subject Subject) notifySubscriber(subscription Subscription, values []interface{}) {
-	passedArguments := make([]reflect.Value, 0)
-	for _, arg := range values {
-		passedArguments = append(passedArguments, reflect.ValueOf(arg))
-	}
-
 	if fn, ok := subject.Subscriptions[subscription]; ok {
 		refFn := reflect.ValueOf(fn)
-		if refFn.Type().NumIn() != len(passedArguments) {
+		fnArgs := make([]reflect.Value, 0)
+		if refFn.Type().NumIn() != len(values) {
 			return
 		}
 
 		for i := 0; i < refFn.Type().NumIn(); i++ {
-			if values[i] == nil || refFn.Type().In(i).Kind() != reflect.ValueOf(values[i]).Type().Kind() {
+			val := values[i]
+
+			if val == nil {
+				fnArgs = append(fnArgs, reflect.New(refFn.Type().In(i)).Elem())
+			} else {
+				fnArgs = append(fnArgs, reflect.ValueOf(val))
+			}
+
+			if val != nil && refFn.Type().In(i).Kind() != reflect.ValueOf(values[i]).Type().Kind() {
 				return
 			}
 		}
 
-		refFn.Call(passedArguments)
+		refFn.Call(fnArgs)
 	}
 }
 
