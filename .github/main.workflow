@@ -4,6 +4,6 @@ workflow "New workflow" {
 }
 
 action "go t" {
-  uses = "go"
+  uses = "docker://golang:1.11"
   args = "test ./..."
 }
