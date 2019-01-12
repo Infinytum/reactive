@@ -28,42 +28,6 @@ func (subject *Subject) Close() {
 	subject.Subscriptions = make(map[Subscription]interface{})
 }
 
-// Subscribe registers a function for further updates of
-// this observable and returns a subscription token which can
-// be used to unsubscribe from it at any time
-func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
-	if fn != nil && reflect.TypeOf(fn).Kind() == reflect.Func {
-		subscription := NewSubscription()
-		subject.Subscriptions[subscription] = fn
-
-		return subscription, nil
-	}
-	return Subscription(""), errors.New("fn is not a function")
-}
-
-// Unsubscribe unregisters a previously registered function for all
-// further updates of this observable or until re-registering.
-func (subject *Subject) Unsubscribe(subscription Subscription) {
-	if _, ok := subject.Subscriptions[subscription]; ok {
-		delete(subject.Subscriptions, subscription)
-	}
-}
-
-// Pipe decorates an observable with one or multiple middlewares
-// and returns a new observable with the decoration applied
-func (subject *Subject) Pipe(fns ...func(Observable, Subjectable)) Observable {
-	parent := subject
-	for _, fn := range fns {
-		if fn == nil {
-			continue
-		}
-		sub := NewSubject()
-		fn(parent, sub)
-		parent = sub
-	}
-	return parent
-}
-
 // Next takes an undefined amount of parameters
 // which will be passed to subscribed functions
 func (subject *Subject) Next(values ...interface{}) {
@@ -95,6 +59,42 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 		}
 
 		refFn.Call(fnArgs)
+	}
+}
+
+// Pipe decorates an observable with one or multiple middlewares
+// and returns a new observable with the decoration applied
+func (subject *Subject) Pipe(fns ...func(Observable, Subjectable)) Observable {
+	parent := subject
+	for _, fn := range fns {
+		if fn == nil {
+			continue
+		}
+		sub := NewSubject()
+		fn(parent, sub)
+		parent = sub
+	}
+	return parent
+}
+
+// Subscribe registers a function for further updates of
+// this observable and returns a subscription token which can
+// be used to unsubscribe from it at any time
+func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
+	if fn != nil && reflect.TypeOf(fn).Kind() == reflect.Func {
+		subscription := NewSubscription()
+		subject.Subscriptions[subscription] = fn
+
+		return subscription, nil
+	}
+	return Subscription(""), errors.New("fn is not a function")
+}
+
+// Unsubscribe unregisters a previously registered function for all
+// further updates of this observable or until re-registering.
+func (subject *Subject) Unsubscribe(subscription Subscription) {
+	if _, ok := subject.Subscriptions[subscription]; ok {
+		delete(subject.Subscriptions, subscription)
 	}
 }
 
