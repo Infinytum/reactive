@@ -53,7 +53,7 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 				fnArgs = append(fnArgs, reflect.ValueOf(val))
 			}
 
-			if val != nil && refFn.Type().In(i).Kind() != reflect.ValueOf(values[i]).Type().Kind() {
+			if val != nil && !reflect.ValueOf(values[i]).Type().AssignableTo(refFn.Type().In(i)) {
 				return
 			}
 		}
