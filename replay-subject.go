@@ -27,17 +27,11 @@ func (subject *ReplaySubject) Close() {
 	subject.Subscriptions = make(map[Subscription]interface{})
 }
 
-// Subscribe registers a function for further updates of
-// this observable and returns a subscription token which can
-// be used to unsubscribe from it at any time
-func (subject *ReplaySubject) Subscribe(fn interface{}) (Subscription, error) {
-	subscription, err := subject.Subject.Subscribe(fn)
-
-	if err == nil && subject.LastValues != nil {
-		subject.notifySubscriber(subscription, subject.LastValues)
-	}
-
-	return subscription, err
+// Next takes an undefined amount of parameters
+// which will be passed to subscribed functions
+func (subject *ReplaySubject) Next(values ...interface{}) {
+	subject.LastValues = values
+	subject.Subject.Next(values...)
 }
 
 // Pipe decorates an observable with one or multiple middlewares
@@ -52,11 +46,17 @@ func (subject *ReplaySubject) Pipe(fns ...func(Observable, Subjectable)) Observa
 	return parent
 }
 
-// Next takes an undefined amount of parameters
-// which will be passed to subscribed functions
-func (subject *ReplaySubject) Next(values ...interface{}) {
-	subject.LastValues = values
-	subject.Subject.Next(values...)
+// Subscribe registers a function for further updates of
+// this observable and returns a subscription token which can
+// be used to unsubscribe from it at any time
+func (subject *ReplaySubject) Subscribe(fn interface{}) (Subscription, error) {
+	subscription, err := subject.Subject.Subscribe(fn)
+
+	if err == nil && subject.LastValues != nil {
+		subject.notifySubscriber(subscription, subject.LastValues)
+	}
+
+	return subscription, err
 }
 
 // NewReplaySubject returns a pointer
