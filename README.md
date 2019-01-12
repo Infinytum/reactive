@@ -2,16 +2,16 @@
 My attempt on creating a simple RxJs clone
 
 ## Features
-* Observables
-  * Multi-Type support
-* Subjects
-  * Subject
-  * ReplaySubject
-* Pipes
-  * Take
-  * TakeEvery
-  * Skip
-  * SkipEvery
+*  Observables
+    *  Multi-Type support
+*  Subjects
+    *  Subject
+    *  ReplaySubject
+*  Pipes
+    *  Take
+    *  TakeEvery
+    *  Skip
+    *  SkipEvery
 
 ## Examples
 
