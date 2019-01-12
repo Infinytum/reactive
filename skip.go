@@ -1,16 +1,22 @@
 package reactive
 
+import "fmt"
+
 // Skip will ignore a specified amount of updates
 // and will pass through all following
 func Skip(count int) func(Observable, Subjectable) {
 	return func(subject Observable, newSubject Subjectable) {
-		subject.Subscribe(func(args ...interface{}) {
+		_, err := subject.Subscribe(func(args ...interface{}) {
 			if count == 0 {
 				newSubject.Next(args...)
 			} else {
 				count--
 			}
 		})
+
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
 
@@ -18,7 +24,7 @@ func Skip(count int) func(Observable, Subjectable) {
 func SkipEvery(count int) func(Observable, Subjectable) {
 	return func(subject Observable, newSubject Subjectable) {
 		var current = 0
-		subject.Subscribe(func(args ...interface{}) {
+		_, err := subject.Subscribe(func(args ...interface{}) {
 			current++
 			if count != current {
 				newSubject.Next(args...)
@@ -26,5 +32,9 @@ func SkipEvery(count int) func(Observable, Subjectable) {
 				current = 0
 			}
 		})
+
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
