@@ -20,6 +20,13 @@ func (subject *ReplaySubject) AsChannel() chan []interface{} {
 	return channel
 }
 
+// Close will remove all subscribers and render
+// the subjectable useless
+func (subject *ReplaySubject) Close() {
+	subject.LastValues = nil
+	subject.Subscriptions = make(map[Subscription]interface{})
+}
+
 // Subscribe registers a function for further updates of
 // this observable and returns a subscription token which can
 // be used to unsubscribe from it at any time

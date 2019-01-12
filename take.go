@@ -11,6 +11,7 @@ func Take(count int) func(Observable, Subjectable) {
 
 			if count == 0 {
 				subject.Unsubscribe(subscription)
+				newSubject.Close
 			}
 		})
 	}
