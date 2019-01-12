@@ -1,11 +1,13 @@
 package reactive
 
+import "fmt"
+
 // Take automatically unsubscribes an observable after
 // the given amount of times it has been updated
 func Take(count int) func(Observable, Subjectable) {
 	return func(subject Observable, newSubject Subjectable) {
 		subscription := NewSubscription()
-		subscription, _ = subject.Subscribe(func(args ...interface{}) {
+		subscription, err := subject.Subscribe(func(args ...interface{}) {
 			newSubject.Next(args...)
 			count--
 
@@ -14,6 +16,10 @@ func Take(count int) func(Observable, Subjectable) {
 				newSubject.Close()
 			}
 		})
+
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
 
@@ -22,12 +28,16 @@ func Take(count int) func(Observable, Subjectable) {
 func TakeEvery(count int) func(Observable, Subjectable) {
 	return func(subject Observable, newSubject Subjectable) {
 		var current = 0
-		subject.Subscribe(func(args ...interface{}) {
+		_, err := subject.Subscribe(func(args ...interface{}) {
 			current++
 			if count == current {
 				newSubject.Next(args...)
 				current = 0
 			}
 		})
+
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
