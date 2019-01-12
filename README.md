@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2f040651d0d4813ae7c80f6f169df65)](https://app.codacy.com/app/infinytum/reactive?utm_source=github.com&utm_medium=referral&utm_content=infinytum/reactive&utm_campaign=Badge_Grade_Dashboard)
 # Reactive [![GoDoc](https://godoc.org/github.com/infinytum/reactive?status.svg)](https://godoc.org/github.com/infinytum/reactive) [![Go Report Card](https://goreportcard.com/badge/github.com/infinytum/reactive)](https://goreportcard.com/report/github.com/infinytum/reactive)
 My attempt on creating a simple RxJs clone
 
