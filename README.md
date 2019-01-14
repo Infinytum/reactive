@@ -20,7 +20,10 @@ My attempt on creating a simple RxJs clone
 ```go
 package main
 
-import "github.com/infinytum/reactive"
+import (
+    "github.com/infinytum/reactive"
+    "fmt"
+)
 
 func main() {
 	subject := reactive.NewSubject()
@@ -32,7 +35,7 @@ func main() {
 }
 
 func subHandler(a int) {
-	println(a)
+	fmt.Println(a)
 }
 ```
 
@@ -50,7 +53,10 @@ $ go run main.go
 ```go
 package main
 
-import "github.com/infinytum/reactive"
+import (
+    "github.com/infinytum/reactive"
+    "fmt"
+)
 
 func main() {
     subject := reactive.NewReplaySubject()
@@ -59,11 +65,10 @@ func main() {
     subject.Next(3)
     subject.Subscribe(subHandler)
     subject.Next(4)
-
 }
 
 func subHandler(a int) {
-	println(a)
+	fmt.Println(a)
 }
 ```
 
@@ -79,7 +84,10 @@ $ go run main.go
 ```go
 package main
 
-import "github.com/infinytum/reactive"
+import (
+    "github.com/infinytum/reactive"
+    "fmt"
+)
 
 func main() {
 	subject := reactive.NewSubject()
@@ -95,13 +103,13 @@ func main() {
 }
 
 func intHandler(a int) {
-	print("Int Handler: ")
-	println(a)
+	fmt.Print("Int Handler: ")
+	fmt.Println(a)
 }
 
 func stringHandler(a string) {
-	print("String Handler: ")
-	println(a)
+	fmt.Print("String Handler: ")
+	fmt.Println(a)
 }
 ```
 
@@ -120,7 +128,10 @@ String Handler:
 ```go
 package main
 
-import "github.com/infinytum/reactive"
+import (
+    "github.com/infinytum/reactive"
+    "fmt"
+)
 
 func main() {
     subject := reactive.NewReplaySubject()
@@ -129,11 +140,10 @@ func main() {
     subject.Next(2)
     subject.Next(3)
     subject.Next(4)
-
 }
 
 func subHandler(a int) {
-	println(a)
+	fmt.Println(a)
 }
 ```
 
@@ -149,7 +159,10 @@ $ go run main.go
 ```go
 package main
 
-import "github.com/infinytum/reactive"
+import (
+    "github.com/infinytum/reactive"
+    "fmt"
+)
 
 func main() {
     subject := reactive.NewReplaySubject()
@@ -158,11 +171,10 @@ func main() {
     subject.Next(2)
     subject.Next(3)
     subject.Next(4)
-
 }
 
 func subHandler(a int) {
-	println(a)
+	fmt.Println(a)
 }
 ```
 
@@ -178,7 +190,10 @@ $ go run main.go
 ```go
 package main
 
-import "github.com/infinytum/reactive"
+import (
+    "github.com/infinytum/reactive"
+    "fmt"
+)
 
 func main() {
     subject := reactive.NewReplaySubject()
@@ -187,11 +202,10 @@ func main() {
     subject.Next(2)
     subject.Next(3)
     subject.Next(4)
-
 }
 
 func subHandler(a int) {
-	println(a)
+	fmt.Println(a)
 }
 ```
 
@@ -207,7 +221,10 @@ $ go run main.go
 ```go
 package main
 
-import "github.com/infinytum/reactive"
+import (
+    "github.com/infinytum/reactive"
+    "fmt"
+)
 
 func main() {
     subject := reactive.NewReplaySubject()
@@ -216,11 +233,10 @@ func main() {
     subject.Next(2)
     subject.Next(3)
     subject.Next(4)
-
 }
 
 func subHandler(a int) {
-	println(a)
+	fmt.Println(a)
 }
 ```
 
