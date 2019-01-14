@@ -22,14 +22,13 @@ func (subject *Subject) AsChannel() chan []interface{} {
 	return channel
 }
 
-// Close will remove all subscribers and render
-// the subjectable useless
+// Close will remove all subscribers and render the subjectable useless
 func (subject *Subject) Close() {
 	subject.Subscriptions = make(map[Subscription]interface{})
 }
 
-// Next takes an undefined amount of parameters
-// which will be passed to subscribed functions
+// Next takes an undefined amount of parameters which will be passed to
+// subscribed functions
 func (subject *Subject) Next(values ...interface{}) {
 	for subscription := range subject.Subscriptions {
 		subject.notifySubscriber(subscription, values)
@@ -39,7 +38,7 @@ func (subject *Subject) Next(values ...interface{}) {
 func (subject Subject) notifySubscriber(subscription Subscription, values []interface{}) {
 	if fn, ok := subject.Subscriptions[subscription]; ok {
 		refFn := reflect.TypeOf(fn)
-		fnArgs := make([]reflect.Value, 0)
+		fnArgs := make([]reflect.Value, 0, refFn.NumIn())
 
 		for argIndex := 0; argIndex < refFn.NumIn(); argIndex++ {
 			providedVal := values[argIndex]
