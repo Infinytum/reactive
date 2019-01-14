@@ -40,9 +40,6 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 	if fn, ok := subject.Subscriptions[subscription]; ok {
 		refFn := reflect.ValueOf(fn)
 		fnArgs := make([]reflect.Value, 0)
-		if refFn.Type().NumIn() != len(values) {
-			return
-		}
 
 		for i := 0; i < refFn.Type().NumIn(); i++ {
 			val := values[i]
@@ -50,12 +47,25 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 			if val == nil {
 				fnArgs = append(fnArgs, reflect.New(refFn.Type().In(i)).Elem())
 			} else {
-				fnArgs = append(fnArgs, reflect.ValueOf(val))
+				// issue 1
+				if refFn.Type().In(i).Kind() == reflect.Slice {
+					for _, innerVal := range values[i:len(values)] {
+						fnArgs = append(fnArgs, reflect.ValueOf(innerVal))
+					}
+					break
+				} else {
+					fnArgs = append(fnArgs, reflect.ValueOf(val))
+				}
 			}
 
 			if val != nil && !reflect.ValueOf(values[i]).Type().AssignableTo(refFn.Type().In(i)) {
 				return
 			}
+
+			if refFn.Type().NumIn() != len(fnArgs) {
+				return
+			}
+
 		}
 
 		refFn.Call(fnArgs)
