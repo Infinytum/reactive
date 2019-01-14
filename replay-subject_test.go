@@ -24,7 +24,7 @@ func TestReplaySubject_Next(t *testing.T) {
 	subject := NewReplaySubject()
 	subject.Next(1)
 
-	if subject.LastValues[0] != 1 {
+	if subject.LastValues[0][0] != 1 {
 		t.Error("LastValues were not set")
 	}
 }
