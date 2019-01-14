@@ -43,8 +43,8 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 		for argIndex := 0; argIndex < refFn.NumIn(); argIndex++ {
 			providedVal := values[argIndex]
 
-			// Slice arguments need special treatment
-			if refFn.In(argIndex).Kind() == reflect.Slice {
+			// Variadic arguments need special treatment
+			if refFn.IsVariadic() {
 				sliceType := refFn.In(argIndex).Elem()
 
 				for _, innerVal := range values[argIndex:len(values)] {
