@@ -119,10 +119,12 @@ func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
 
 // Unsubscribe unregisters a previously registered function for all
 // further updates of this observable or until re-registering.
-func (subject *Subject) Unsubscribe(subscription Subscription) {
-	if _, ok := subject.Subscriptions[subscription]; ok {
-		delete(subject.Subscriptions, subscription)
+func (subject *Subject) Unsubscribe(subscription Subscription) error {
+	if _, ok := subject.Subscriptions[subscription]; !ok {
+		return errors.New("Subscription not found in subject")
 	}
+	delete(subject.Subscriptions, subscription)
+	return nil
 }
 
 // NewSubject returns a pointer

@@ -18,5 +18,5 @@ type Observable interface {
 
 	// Unsubscribe unregisters a previously registered function for all
 	// further updates of this observable or until re-registering.
-	Unsubscribe(subscription Subscription)
+	Unsubscribe(subscription Subscription) error
 }
