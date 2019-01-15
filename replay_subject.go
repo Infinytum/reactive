@@ -1,18 +1,18 @@
 package reactive
 
-// ReplaySubject is a special implementation of a subject
+// replaySubject is a special implementation of a subject
 // It will always keep the last submitted value and new subscribers
 // will receive that value immediately.
-type ReplaySubject struct {
-	BufferSubject
+type replaySubject struct {
+	bufferSubject
 }
 
 // Pipe decorates an observable with one or multiple middlewares
 // and returns a new observable with the decoration applied
-func (subject *ReplaySubject) Pipe(fns ...func(Observable, Subjectable)) Observable {
+func (subject *replaySubject) Pipe(fns ...func(Observable, Subjectable)) Observable {
 	parent := subject
 	for _, fn := range fns {
-		sub := NewReplaySubject()
+		sub := NewReplaySubject().(*replaySubject)
 		fn(parent, sub)
 		parent = sub
 	}
@@ -20,9 +20,9 @@ func (subject *ReplaySubject) Pipe(fns ...func(Observable, Subjectable)) Observa
 }
 
 // NewReplaySubject returns a pointer
-// to an empty instance of ReplaySubject
-func NewReplaySubject() *ReplaySubject {
-	return &ReplaySubject{
-		BufferSubject: *NewBufferSubject(1),
+// to an empty instance of replaySubject
+func NewReplaySubject() Subjectable {
+	return &replaySubject{
+		bufferSubject: *NewBufferSubject(1).(*bufferSubject),
 	}
 }

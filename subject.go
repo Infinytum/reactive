@@ -5,14 +5,14 @@ import (
 	"reflect"
 )
 
-// Subject is the basic implementation of a subjectable
-type Subject struct {
+// subject is the basic implementation of a subjectable
+type subject struct {
 	Subscriptions map[Subscription]interface{}
 }
 
 // AsChannel returns a channel which will receive all
 // further updates of this observable
-func (subject *Subject) AsChannel() chan []interface{} {
+func (subject *subject) AsChannel() chan []interface{} {
 	channel := make(chan []interface{})
 	go subject.Subscribe(func(args ...interface{}) {
 		go func(channel chan []interface{}) {
@@ -23,19 +23,19 @@ func (subject *Subject) AsChannel() chan []interface{} {
 }
 
 // Close will remove all subscribers and render the subjectable useless
-func (subject *Subject) Close() {
+func (subject *subject) Close() {
 	subject.Subscriptions = make(map[Subscription]interface{})
 }
 
 // Next takes an undefined amount of parameters which will be passed to
 // subscribed functions
-func (subject *Subject) Next(values ...interface{}) {
+func (subject *subject) Next(values ...interface{}) {
 	for subscription := range subject.Subscriptions {
 		subject.notifySubscriber(subscription, values)
 	}
 }
 
-func (subject Subject) notifySubscriber(subscription Subscription, values []interface{}) {
+func (subject subject) notifySubscriber(subscription Subscription, values []interface{}) {
 	if fn, ok := subject.Subscriptions[subscription]; ok {
 		refFn := reflect.TypeOf(fn)
 		fnArgs := make([]reflect.Value, 0, refFn.NumIn())
@@ -91,13 +91,13 @@ func (subject Subject) notifySubscriber(subscription Subscription, values []inte
 
 // Pipe decorates an observable with one or multiple middlewares
 // and returns a new observable with the decoration applied
-func (subject *Subject) Pipe(fns ...func(Observable, Subjectable)) Observable {
-	parent := subject
+func (su *subject) Pipe(fns ...func(Observable, Subjectable)) Observable {
+	parent := su
 	for _, fn := range fns {
 		if fn == nil {
 			continue
 		}
-		sub := NewSubject()
+		sub := NewSubject().(*subject)
 		fn(parent, sub)
 		parent = sub
 	}
@@ -107,7 +107,7 @@ func (subject *Subject) Pipe(fns ...func(Observable, Subjectable)) Observable {
 // Subscribe registers a function for further updates of
 // this observable and returns a subscription token which can
 // be used to unsubscribe from it at any time
-func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
+func (subject *subject) Subscribe(fn interface{}) (Subscription, error) {
 	if fn != nil && reflect.TypeOf(fn).Kind() == reflect.Func {
 		subscription := NewSubscription()
 		subject.Subscriptions[subscription] = fn
@@ -119,7 +119,7 @@ func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
 
 // Unsubscribe unregisters a previously registered function for all
 // further updates of this observable or until re-registering.
-func (subject *Subject) Unsubscribe(subscription Subscription) error {
+func (subject *subject) Unsubscribe(subscription Subscription) error {
 	if _, ok := subject.Subscriptions[subscription]; !ok {
 		return errors.New("Subscription not found in subject")
 	}
@@ -128,9 +128,9 @@ func (subject *Subject) Unsubscribe(subscription Subscription) error {
 }
 
 // NewSubject returns a pointer
-// to an empty instance of Subject
-func NewSubject() *Subject {
-	return &Subject{
+// to an empty instance of subject
+func NewSubject() Subjectable {
+	return &subject{
 		Subscriptions: make(map[Subscription]interface{}),
 	}
 }

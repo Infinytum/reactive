@@ -5,7 +5,7 @@ import (
 )
 
 func TestNewReplaySubject(t *testing.T) {
-	subject := NewReplaySubject()
+	subject := NewReplaySubject().(*replaySubject)
 
 	if subject == nil {
 		t.Error("NewReplaySubject returned nil")
@@ -21,7 +21,7 @@ func TestNewReplaySubject(t *testing.T) {
 }
 
 func TestReplaySubject_Next(t *testing.T) {
-	subject := NewReplaySubject()
+	subject := NewReplaySubject().(*replaySubject)
 	subject.Next(1)
 
 	if subject.LastValues[0][0] != 1 {
@@ -42,7 +42,7 @@ func TestReplaySubject_Pipe(t *testing.T) {
 }
 
 func TestReplaySubject_Subscribe(t *testing.T) {
-	subject := NewReplaySubject()
+	subject := NewReplaySubject().(*replaySubject)
 	subscription, _ := subject.Subscribe(func(nr int) {})
 
 	if _, exists := subject.Subscriptions[subscription]; !exists {

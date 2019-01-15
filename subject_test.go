@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewSubject(t *testing.T) {
-	subject := NewSubject()
+	subject := NewSubject().(*subject)
 
 	if subject == nil {
 		t.Error("NewSubject returned nil")
@@ -22,7 +22,7 @@ func TestNewSubject(t *testing.T) {
 }
 
 func TestSubject_Subscribe(t *testing.T) {
-	subject := NewSubject()
+	subject := NewSubject().(*subject)
 	subscription, _ := subject.Subscribe(func() {})
 
 	if _, exists := subject.Subscriptions[subscription]; !exists {
@@ -35,7 +35,7 @@ func TestSubject_Subscribe(t *testing.T) {
 }
 
 func TestSubject_Next(t *testing.T) {
-	subject := NewSubject()
+	subject := NewSubject().(*subject)
 	didRun := false
 	subject.Subscribe(func(run bool) {
 		didRun = run
@@ -49,7 +49,7 @@ func TestSubject_Next(t *testing.T) {
 }
 
 func TestSubject_Pipe(t *testing.T) {
-	subject := NewSubject()
+	subject := NewSubject().(*subject)
 
 	if subject != subject.Pipe() {
 		t.Error("Empty pipe is different from original")
@@ -61,7 +61,7 @@ func TestSubject_Pipe(t *testing.T) {
 }
 
 func TestSubject_Unsubscribe(t *testing.T) {
-	subject := NewSubject()
+	subject := NewSubject().(*subject)
 	subscription, _ := subject.Subscribe(func() {})
 
 	if _, exists := subject.Subscriptions[subscription]; !exists {
@@ -76,7 +76,7 @@ func TestSubject_Unsubscribe(t *testing.T) {
 }
 
 func TestSubject_AsChannel(t *testing.T) {
-	subject := NewSubject()
+	subject := NewSubject().(*subject)
 	channel := make(chan interface{})
 
 	go func() {
