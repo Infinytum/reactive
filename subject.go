@@ -114,7 +114,7 @@ func (subject *Subject) Subscribe(fn interface{}) (Subscription, error) {
 
 		return subscription, nil
 	}
-	return Subscription(""), errors.New("fn is not a function")
+	return EmptySubscription(), errors.New("fn is not a function")
 }
 
 // Unsubscribe unregisters a previously registered function for all

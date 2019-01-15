@@ -29,7 +29,7 @@ func TestSubject_Subscribe(t *testing.T) {
 		t.Error("Subscription is not in subscription map")
 	}
 
-	if sub, err := subject.Subscribe(3); err == nil || sub != "" {
+	if sub, err := subject.Subscribe(3); err == nil || sub != EmptySubscription() {
 		t.Error("Subscribe accepted non-function parameters")
 	}
 }
