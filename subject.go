@@ -44,11 +44,11 @@ func (subject subject) notifySubscriber(subscription Subscription, values []inte
 			providedVal := values[argIndex]
 
 			// Variadic arguments need special treatment
-			if refFn.IsVariadic() {
+			if refFn.IsVariadic() && refFn.In(argIndex).Kind() == reflect.Slice {
 				sliceType := refFn.In(argIndex).Elem()
 
 				for _, innerVal := range values[argIndex:len(values)] {
-					if providedVal == nil {
+					if innerVal == nil {
 						fnArgs = append(fnArgs, reflect.New(sliceType).Elem())
 						continue
 					}
