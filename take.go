@@ -1,7 +1,5 @@
 package reactive
 
-import "fmt"
-
 // Take automatically unsubscribes an observable after
 // the given amount of times it has been updated
 func Take(count int) func(Observable, Subjectable) {
@@ -17,8 +15,9 @@ func Take(count int) func(Observable, Subjectable) {
 			}
 		})
 
+		// This error will never happen. But for gamma rays sake.
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 	}
 }
@@ -36,8 +35,9 @@ func TakeEvery(count int) func(Observable, Subjectable) {
 			}
 		})
 
+		// This error will never happen. But for gamma rays sake.
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 	}
 }

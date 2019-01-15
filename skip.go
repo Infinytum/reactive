@@ -1,7 +1,5 @@
 package reactive
 
-import "fmt"
-
 // Skip will ignore a specified amount of updates
 // and will pass through all following
 func Skip(count int) func(Observable, Subjectable) {
@@ -14,8 +12,9 @@ func Skip(count int) func(Observable, Subjectable) {
 			}
 		})
 
+		// This error will never happen. But for gamma rays sake.
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 	}
 }
@@ -33,8 +32,9 @@ func SkipEvery(count int) func(Observable, Subjectable) {
 			}
 		})
 
+		// This error will never happen. But for gamma rays sake.
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 	}
 }
