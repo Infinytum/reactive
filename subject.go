@@ -41,10 +41,14 @@ func (subject subject) notifySubscriber(subscription Subscription, values []inte
 		fnArgs := make([]reflect.Value, 0, refFn.NumIn())
 
 		for argIndex := 0; argIndex < refFn.NumIn(); argIndex++ {
+			if len(values) == argIndex {
+				return
+			}
+
 			providedVal := values[argIndex]
 
 			// Variadic arguments need special treatment
-			if refFn.IsVariadic() && refFn.In(argIndex).Kind() == reflect.Slice {
+			if refFn.IsVariadic() && refFn.In(argIndex).Kind() == reflect.Slice && argIndex == refFn.NumIn()-1 {
 				sliceType := refFn.In(argIndex).Elem()
 
 				for _, innerVal := range values[argIndex:len(values)] {
