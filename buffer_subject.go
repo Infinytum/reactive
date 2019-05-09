@@ -49,6 +49,9 @@ func (subject *bufferSubject) Next(values ...interface{}) {
 func (subject *bufferSubject) Pipe(fns ...func(Observable, Subjectable)) Observable {
 	parent := subject
 	for _, fn := range fns {
+		if fn == nil {
+			continue
+		}
 		sub := NewBufferSubject(len(subject.LastValues)).(*bufferSubject)
 		fn(parent, sub)
 		parent = sub
