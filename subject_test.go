@@ -1,6 +1,7 @@
 package reactive
 
 import (
+	"reflect"
 	"testing"
 	"time"
 )
@@ -19,6 +20,20 @@ func TestNewSubject(t *testing.T) {
 	if len(subject.Subscriptions) != 0 {
 		t.Error("NewSubject did not create empty subscriptions map")
 	}
+}
+
+func TestSubject_Close(t *testing.T) {
+	sub := NewSubject()
+	sub.Subscribe(func() {})
+
+	sub.Close()
+
+	casted := sub.(*subject)
+
+	if !reflect.DeepEqual(casted.Subscriptions, make(map[Subscription]interface{})) {
+		t.Error("Subscriptions does not equal empty list")
+	}
+
 }
 
 func TestSubject_Subscribe(t *testing.T) {
@@ -58,6 +73,10 @@ func TestSubject_Pipe(t *testing.T) {
 	if subject == subject.Pipe(Take(1)) {
 		t.Error("Take pipe resulted in original subject")
 	}
+
+	if subject != subject.Pipe(nil) {
+		t.Error("Nil pipe is different from original")
+	}
 }
 
 func TestSubject_Unsubscribe(t *testing.T) {
@@ -72,6 +91,15 @@ func TestSubject_Unsubscribe(t *testing.T) {
 
 	if _, exists := subject.Subscriptions[subscription]; exists {
 		t.Error("Subscription is still in subscription map")
+	}
+}
+
+func TestSubject_UnsubscribeUnknown(t *testing.T) {
+	subject := NewSubject().(*subject)
+	subscription := NewSubscription()
+
+	if subject.Unsubscribe(subscription) == nil {
+		t.Error("Unsubscription did not recognize invalid subscription")
 	}
 }
 
