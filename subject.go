@@ -88,8 +88,9 @@ func (subject subject) notifySubscriber(subscription Subscription, values []inte
 			}
 
 		}
-
-		reflect.ValueOf(fn).Call(fnArgs)
+		if fn != nil {
+			reflect.ValueOf(fn).Call(fnArgs)
+		}
 	}
 }
 
