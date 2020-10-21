@@ -1,6 +1,10 @@
 package reactive
 
-import "github.com/infinytum/reactive/internal"
+import (
+	"sync"
+
+	"github.com/infinytum/reactive/internal"
+)
 
 // bufferSubject is a special implementation of a subject
 // It will always keep the submitted values until the buffer is full
@@ -33,7 +37,7 @@ func (subject *bufferSubject) AsChannel() chan []interface{} {
 // the subjectable useless
 func (subject *bufferSubject) Close() {
 	subject.LastValues = nil
-	subject.Subscriptions = make(map[Subscription]interface{})
+	subject.Subscriptions = sync.Map{}
 }
 
 // Next takes an undefined amount of parameters
@@ -84,7 +88,7 @@ func NewBufferSubject(bufferSize int) Subjectable {
 	return &bufferSubject{
 		LastValues: make([][]interface{}, bufferSize),
 		subject: subject{
-			Subscriptions: make(map[Subscription]interface{}),
+			Subscriptions: sync.Map{},
 		},
 	}
 }

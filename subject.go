@@ -3,11 +3,12 @@ package reactive
 import (
 	"errors"
 	"reflect"
+	"sync"
 )
 
 // subject is the basic implementation of a subjectable
 type subject struct {
-	Subscriptions map[Subscription]interface{}
+	Subscriptions sync.Map
 }
 
 // AsChannel returns a channel which will receive all
@@ -24,19 +25,21 @@ func (subject *subject) AsChannel() chan []interface{} {
 
 // Close will remove all subscribers and render the subjectable useless
 func (subject *subject) Close() {
-	subject.Subscriptions = make(map[Subscription]interface{})
+	subject.Subscriptions = sync.Map{}
 }
 
 // Next takes an undefined amount of parameters which will be passed to
 // subscribed functions
 func (subject *subject) Next(values ...interface{}) {
-	for subscription := range subject.Subscriptions {
+	subject.Subscriptions.Range(func(subscription, value interface{}) bool {
 		subject.notifySubscriber(subscription, values)
-	}
+		return true
+	})
 }
 
-func (subject subject) notifySubscriber(subscription Subscription, values []interface{}) {
-	if fn, ok := subject.Subscriptions[subscription]; ok {
+func (subject subject) notifySubscriber(subscription interface{}, values []interface{}) {
+
+	if fn, ok := subject.Subscriptions.Load(subscription); ok {
 		refFn := reflect.TypeOf(fn)
 		fnArgs := make([]reflect.Value, 0, refFn.NumIn())
 
@@ -115,7 +118,7 @@ func (su *subject) Pipe(fns ...func(Observable, Subjectable)) Observable {
 func (subject *subject) Subscribe(fn interface{}) (Subscription, error) {
 	if fn != nil && reflect.TypeOf(fn).Kind() == reflect.Func {
 		subscription := NewSubscription()
-		subject.Subscriptions[subscription] = fn
+		subject.Subscriptions.Store(subscription, fn)
 
 		return subscription, nil
 	}
@@ -125,10 +128,10 @@ func (subject *subject) Subscribe(fn interface{}) (Subscription, error) {
 // Unsubscribe unregisters a previously registered function for all
 // further updates of this observable or until re-registering.
 func (subject *subject) Unsubscribe(subscription Subscription) error {
-	if _, ok := subject.Subscriptions[subscription]; !ok {
+	if _, ok := subject.Subscriptions.Load(subscription); !ok {
 		return errors.New("Subscription not found in subject")
 	}
-	delete(subject.Subscriptions, subscription)
+	subject.Subscriptions.Delete(subscription)
 	return nil
 }
 
@@ -136,6 +139,6 @@ func (subject *subject) Unsubscribe(subscription Subscription) error {
 // to an empty instance of subject
 func NewSubject() Subjectable {
 	return &subject{
-		Subscriptions: make(map[Subscription]interface{}),
+		Subscriptions: sync.Map{},
 	}
 }

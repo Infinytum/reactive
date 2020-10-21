@@ -2,6 +2,7 @@ package reactive
 
 import (
 	"reflect"
+	"sync"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func Test_bufferSubject_Close(t *testing.T) {
 		t.Error("LastValues does not equal nil")
 	}
 
-	if !reflect.DeepEqual(casted.Subscriptions, make(map[Subscription]interface{})) {
+	if !reflect.DeepEqual(casted.Subscriptions, sync.Map{}) {
 		t.Error("Subscriptions does not equal empty list")
 	}
 
